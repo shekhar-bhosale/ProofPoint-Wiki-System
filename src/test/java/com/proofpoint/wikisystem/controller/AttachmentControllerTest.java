@@ -40,7 +40,7 @@ public class AttachmentControllerTest {
     }
 
     @Test
-    final void testRead() {
+    final void testRead_HappyCase() {
         when(attachmentService.accessAttachment(FILE_NAME, REQUESTER_ID, true)).thenReturn(ATTACHMENT);
         ResponseEntity<Attachment> output = attachmentController.read(FILE_NAME, REQUESTER_ID, INDV_USER_TRUE);
         assertNotNull(output);
@@ -50,7 +50,7 @@ public class AttachmentControllerTest {
     }
 
     @Test
-    final void testCreate() {
+    final void testCreate_HappyCase() {
         CreateAttachmentDto createAttachmentDto = new CreateAttachmentDto();
         createAttachmentDto.setFilename(FILE_NAME);
         createAttachmentDto.setContents(FILE_CONTENT);

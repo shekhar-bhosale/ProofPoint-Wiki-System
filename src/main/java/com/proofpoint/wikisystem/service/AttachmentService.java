@@ -1,5 +1,7 @@
 package com.proofpoint.wikisystem.service;
 
+import com.proofpoint.wikisystem.exceptions.AccessDeniedException;
+import com.proofpoint.wikisystem.exceptions.AttachmentNotFoundException;
 import com.proofpoint.wikisystem.model.*;
 import com.proofpoint.wikisystem.payload.UpdateComponentDto;
 import com.proofpoint.wikisystem.util.Action;
@@ -64,7 +66,7 @@ public class AttachmentService {
             log.info("Attachment found:" + output.toString());
             return output;
         } else {
-            return null;
+            throw new AttachmentNotFoundException("Attachment not found");
         }
     }
 
@@ -72,7 +74,7 @@ public class AttachmentService {
         if (isAuthorizedToPerformAction(Action.READ, filename, requesterId, isIndividualUser)) {
             return read(filename);
         } else {
-            return null;
+            throw new AccessDeniedException("Not authorized");
         }
     }
 
@@ -96,12 +98,12 @@ public class AttachmentService {
                 return "Attachment not found";
             }
         } else {
-            return "Not authorized to perform action on given component";
+            throw new AccessDeniedException("Not authorized");
         }
     }
 
     private boolean isRequesterIsOwner(final Attachment attachment, final String requesterId) {
-        return attachment.getOwner().getUsername().equals(requesterId);
+        return attachment.getOwner().getId().equals(requesterId);
     }
 
     public boolean delete(final String filename, final String requesterId, final Boolean isIndividualUser) {
@@ -113,7 +115,7 @@ public class AttachmentService {
                 return false;
             }
         } else {
-            return false;
+            throw new AccessDeniedException("Not authorized");
         }
     }
 
@@ -130,7 +132,7 @@ public class AttachmentService {
             collaborator = userService.read(requesterId);
         } else {
             Team team = teamService.read(requesterId);
-            if (team.isAdmin()) {
+            if (team!= null && team.isAdmin()) {
                 return true;
             }
             collaborator = team;
@@ -141,7 +143,7 @@ public class AttachmentService {
         Map<AccessType, List<Collaborator>> accessMap = attachment.getAccessMap();
 
         for (AccessType allowedAccessType : allowedAccessTypes) {
-            if (accessMap.get(allowedAccessType).contains(collaborator)) {
+            if (accessMap != null && accessMap.get(allowedAccessType) != null && accessMap.get(allowedAccessType).contains(collaborator)) {
                 return true;
             }
         }

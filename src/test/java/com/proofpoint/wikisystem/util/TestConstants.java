@@ -11,8 +11,9 @@ public class TestConstants {
     public final static String REQUESTER_ID = "foo";
     public final static String INDV_USER_TRUE = "True";
     public final static String FILE_CONTENT = "Random data not important";
+    public final static String UPDATED_FILE_CONTENT = "Updated Random data not important";
     public final static String USER_ID = "User101";
-    public final static String ADDITIONAL_USER_ID = "User101";
+    public final static String ADDITIONAL_USER_ID = "AdditionalUser101";
     public final static String PAGE_ID = "Page101";
     public final static String PARENT_USER_ID = "ParentUser101";
     public final static String PARENT_PAGE_ID = "Page501";

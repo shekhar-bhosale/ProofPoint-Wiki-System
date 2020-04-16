@@ -69,7 +69,7 @@ public class PageServiceTest {
 
 
     @Test
-    public void testCreate_Failed() throws Exception {
+    public void testCreate_FailureCase() throws Exception {
         when(userService.read(USER_ID)).thenReturn(OWNER);
         when(teamService.read(TEAM_ID)).thenReturn(TEAM);
 
