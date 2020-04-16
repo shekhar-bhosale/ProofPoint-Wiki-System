@@ -1,11 +1,7 @@
 package com.proofpoint.wikisystem.controller;
 
-import com.proofpoint.wikisystem.exceptions.AccessDeniedException;
-import com.proofpoint.wikisystem.model.AccessType;
-import com.proofpoint.wikisystem.model.Collaborator;
-import com.proofpoint.wikisystem.model.Component;
 import com.proofpoint.wikisystem.payload.CreateAccessDto;
-import com.proofpoint.wikisystem.service.*;
+import com.proofpoint.wikisystem.service.AccessService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

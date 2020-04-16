@@ -33,6 +33,10 @@ public class Team extends Collaborator {
                 '}';
     }
 
+    public String getId() {
+        return this.Id;
+    }
+
     public void create() {
         System.out.println("Creating team");
     }

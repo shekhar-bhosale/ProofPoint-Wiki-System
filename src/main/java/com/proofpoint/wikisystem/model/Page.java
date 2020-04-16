@@ -24,7 +24,7 @@ public class Page extends Component {
         this.pageID = builder.pageID;
         this.parentPageID = builder.parentPageID;
         this.content = builder.content;
-        this.accessMap = new HashMap<AccessType, List<Collaborator>>();
+        this.accessMap = new HashMap<>();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class Page extends Component {
 
     public void addAttachment(Attachment attachment) {
         if (this.attachments == null) {
-            this.attachments = new ArrayList<Attachment>();
+            this.attachments = new ArrayList<>();
         }
         attachments.add(attachment);
     }
@@ -80,22 +80,22 @@ public class Page extends Component {
             return new Builder();
         }
 
-        public Builder withPageID(String pageID) {
+        public Builder withPageID(final String pageID) {
             this.pageID = pageID;
             return this;
         }
 
-        public Builder withParentPageID(String parentPageID) {
+        public Builder withParentPageID(final String parentPageID) {
             this.parentPageID = parentPageID;
             return this;
         }
 
-        public Builder withOwner(User owner) {
+        public Builder withOwner(final User owner) {
             this.owner = owner;
             return this;
         }
 
-        public Builder withContent(String content) {
+        public Builder withContent(final String content) {
             this.content = content;
             return this;
         }

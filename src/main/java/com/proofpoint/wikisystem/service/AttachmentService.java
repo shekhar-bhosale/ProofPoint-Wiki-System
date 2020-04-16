@@ -29,23 +29,24 @@ public class AttachmentService {
     @Autowired
     private TeamService teamService;
 
-    public void create(String filename, String contents, User owner, Map<String, String> accessMap) throws Exception {
-        Attachment attachment = Attachment
-                .Builder
-                .newInstance()
-                .withFilename(filename)
-                .withContents(contents)
-                .withOwner(owner)
-                .build();
+    public void create(final String filename, final String contents, final User owner, final Map<String, String> accessMap)
+            throws Exception {
+        final Attachment attachment = Attachment
+                    .Builder
+                    .newInstance()
+                    .withFilename(filename)
+                    .withContents(contents)
+                    .withOwner(owner)
+                    .build();
 
-        if(accessMap!=null){
+        if (accessMap != null) {
             log.info("Assigning access rights to component");
-            for(String collaboratorId: accessMap.keySet()){
+            for (String collaboratorId : accessMap.keySet()) {
                 Collaborator collaborator;
                 collaborator = userService.read(collaboratorId);
-                if(collaborator==null){
+                if (collaborator == null) {
                     collaborator = teamService.read(collaboratorId);
-                    if(collaborator==null) {
+                    if (collaborator == null) {
                         log.error("User does not exist");
                         throw new Exception("Given user in access map does not exist");
                     }
@@ -57,7 +58,7 @@ public class AttachmentService {
         attachments.put(filename, attachment);
     }
 
-    public Attachment read(String filename) {
+    public Attachment read(final String filename) {
         if (attachments.containsKey(filename)) {
             Attachment output = attachments.get(filename);
             log.info("Attachment found:" + output.toString());
@@ -67,60 +68,60 @@ public class AttachmentService {
         }
     }
 
-    public Attachment readAttachment(String filename, String requesterId, Boolean isIndividualUser) {
-        if (isAuthorizedtoPerformAction(Action.READ, filename, requesterId, isIndividualUser)) {
+    public Attachment accessAttachment(final String filename, final String requesterId, Boolean isIndividualUser) {
+        if (isAuthorizedToPerformAction(Action.READ, filename, requesterId, isIndividualUser)) {
             return read(filename);
-        }else{
+        } else {
             return null;
         }
     }
 
-    public String update(String filename, UpdateComponentDto updateArgs, String requesterId){
-        if (isAuthorizedtoPerformAction(Action.UPDATE, filename, requesterId, Boolean.parseBoolean(updateArgs.getIsIndividualUser()))) {
-            if(attachments.containsKey(filename)){
+    public String update(final String filename, final UpdateComponentDto updateArgs, final  String requesterId) {
+        if (isAuthorizedToPerformAction(Action.UPDATE, filename, requesterId, Boolean.parseBoolean(updateArgs.getIsIndividualUser()))) {
+            if (attachments.containsKey(filename)) {
                 Attachment attachment = attachments.get(filename);
-                if(updateArgs.getContents()!=null){
+                if (updateArgs.getContents() != null) {
                     attachment.setContents(updateArgs.getContents());
                 }
 
-                if(updateArgs.getOwnerId() != null){
-                    if(isRequesterisOwner(attachment, requesterId)){
+                if (updateArgs.getOwnerId() != null) {
+                    if (isRequesterIsOwner(attachment, requesterId)) {
                         log.info("Transferring ownership of file");
                         User owner = userService.read(updateArgs.getOwnerId());
                         attachment.setOwner(owner);
                     }
                 }
                 return "Successfully updated attachment";
-            }else{
+            } else {
                 return "Attachment not found";
             }
-        }else{
+        } else {
             return "Not authorized to perform action on given component";
         }
     }
 
-    private boolean isRequesterisOwner(Attachment attachment, String requesterId){
+    private boolean isRequesterIsOwner(final Attachment attachment, final String requesterId) {
         return attachment.getOwner().getUsername().equals(requesterId);
     }
 
-    public boolean delete(String filename, String requesterId, Boolean isIndividualUser) {
-        if (isAuthorizedtoPerformAction(Action.DELETE, filename, requesterId, isIndividualUser)) {
+    public boolean delete(final String filename, final String requesterId, final Boolean isIndividualUser) {
+        if (isAuthorizedToPerformAction(Action.DELETE, filename, requesterId, isIndividualUser)) {
             if (attachments.containsKey(filename)) {
                 attachments.remove(filename);
                 return true;
             } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
     }
 
-    private boolean isAuthorizedtoPerformAction(Action action, String filename, String requesterId, boolean isIndividualUser) {
+    private boolean isAuthorizedToPerformAction(final Action action, final String filename, final String requesterId, final boolean isIndividualUser) {
 
         Attachment attachment = read(filename);
 
-        if (isRequesterisOwner(attachment, requesterId)) {
+        if (isRequesterIsOwner(attachment, requesterId)) {
             return true;
         }
 

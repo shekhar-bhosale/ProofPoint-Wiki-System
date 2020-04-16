@@ -16,7 +16,6 @@ public class WikiSystemController {
     public ResponseEntity<String> welcomeMessage() {
         log.info("Welcome page");
         String message = "Welcome to WikiSystem";
-        ResponseEntity<String> response = new ResponseEntity<>(message, HttpStatus.OK);
-        return response;
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

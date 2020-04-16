@@ -31,7 +31,8 @@ public class PageService {
     @Autowired
     private TeamService teamService;
 
-    public void create(String pageID, String parentPageID, User owner, String content, Map<String, String> accessMap) throws Exception {
+    public void create(final String pageID, final String parentPageID, final User owner, final String content,
+                       final Map<String, String> accessMap) throws Exception {
         log.info("Creating page with pageId:" + pageID);
         Page page = Page.Builder
                 .newInstance()
@@ -64,12 +65,12 @@ public class PageService {
 
     }
 
-    public Page read(String pageID) {
+    public Page read(final String pageID) {
         return pages.getOrDefault(pageID, null);
     }
 
-    public String update(String pageId, UpdateComponentDto updateArgs, String requesterId) {
-        if (isAuthorizedtoPerformAction(Action.UPDATE, pageId, requesterId, Boolean.parseBoolean(updateArgs.getIsIndividualUser()))){
+    public String update(final String pageId, final UpdateComponentDto updateArgs, final String requesterId) {
+        if (isAuthorizedToPerformAction(Action.UPDATE, pageId, requesterId, Boolean.parseBoolean(updateArgs.getIsIndividualUser()))) {
             if (pages.containsKey(pageId)) {
                 Page page = pages.get(pageId);
                 if (updateArgs.getContents() != null) {
@@ -77,7 +78,7 @@ public class PageService {
                 }
 
                 if (updateArgs.getOwnerId() != null) {
-                    if (isRequesterisOwner(page, requesterId)) {
+                    if (isRequesterIsOwner(page, requesterId)) {
                         log.info("Transferring ownership of page");
                         User owner = userService.read(updateArgs.getOwnerId());
                         page.setOwner(owner);
@@ -87,29 +88,30 @@ public class PageService {
             } else {
                 return "Page not found";
             }
-        }else{
+        } else {
             return "Not authorized to perform action on given component";
         }
 
     }
 
-    public Page readPage(String pageID, String requesterId, boolean isIndividualUser) {
-        if (isAuthorizedtoPerformAction(Action.READ, pageID, requesterId, isIndividualUser)) {
+    public Page accessPage(final String pageID, final String requesterId, final boolean isIndividualUser) {
+        if (isAuthorizedToPerformAction(Action.READ, pageID, requesterId, isIndividualUser)) {
             return read(pageID);
         } else {
             return null;
         }
     }
 
-    private boolean isRequesterisOwner(Page page, String requesterId) {
+    private boolean isRequesterIsOwner(final Page page, final String requesterId) {
         return page.getOwner().getUsername().equals(requesterId);
     }
 
-    private boolean isAuthorizedtoPerformAction(Action action, String pageID, String requesterId, boolean isIndividualUser) {
+    private boolean isAuthorizedToPerformAction(final Action action, final String pageID, final String requesterId,
+                                                final boolean isIndividualUser) {
 
-        Page page = read(pageID);
+        final Page page = read(pageID);
 
-        if (isRequesterisOwner(page, requesterId)) {
+        if (isRequesterIsOwner(page, requesterId)) {
             return true;
         }
 
@@ -137,15 +139,15 @@ public class PageService {
         return false;
     }
 
-    public boolean delete(String pageID, String requesterId, boolean isIndividualUser ) {
-        if (isAuthorizedtoPerformAction(Action.DELETE, pageID, requesterId, isIndividualUser)){
+    public boolean delete(final String pageID, final String requesterId, final boolean isIndividualUser) {
+        if (isAuthorizedToPerformAction(Action.DELETE, pageID, requesterId, isIndividualUser)) {
             if (pages.containsKey(pageID)) {
                 pages.remove(pageID);
                 return true;
             } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
     }
@@ -159,15 +161,20 @@ public class PageService {
         List<Collaborator> noAccessGroup = new ArrayList<>();
 
         Page parentPage = read(page.getParentPageID());
-        if (parentPage.getPageID() != null) {
+        if (parentPage != null && parentPage.getPageID() != null) {
             // Add parent owner to RW
             readWriteGroup.add(parentPage.getOwner());
 
             //Add Inherited Access
             if (parentPage.getAccessMap() != null) {
-                readWriteGroup.addAll(parentPage.getAccessMap().get(AccessType.READ_WRITE));
-                readGroup.addAll(parentPage.getAccessMap().get(AccessType.READ_ONLY));
-                noAccessGroup.addAll(parentPage.getAccessMap().get(AccessType.NO_ACCESS));
+                if (parentPage.getAccessMap().get(AccessType.READ_WRITE) != null)
+                    readWriteGroup.addAll(parentPage.getAccessMap().get(AccessType.READ_WRITE));
+
+                if (parentPage.getAccessMap().get(AccessType.READ_ONLY) != null)
+                    readGroup.addAll(parentPage.getAccessMap().get(AccessType.READ_ONLY));
+
+                if (parentPage.getAccessMap().get(AccessType.NO_ACCESS) != null)
+                    noAccessGroup.addAll(parentPage.getAccessMap().get(AccessType.NO_ACCESS));
             }
         }
 

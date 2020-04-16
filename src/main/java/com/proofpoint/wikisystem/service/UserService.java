@@ -16,7 +16,7 @@ public class UserService {
 
     private Map<String, User> users = new HashMap<>();
 
-    public void create(String ID, String username) {
+    public void create(final String ID, final String username) {
         log.info("Creating user with userID:" + ID);
         User user = User.Builder
                 .newInstance()
@@ -28,24 +28,24 @@ public class UserService {
 
     }
 
-    public User read(String userID) {
-        log.info("Checking if user "+userID+" exists in system.");
+    public User read(final String userID) {
+        log.info("Checking if user " + userID + " exists in system.");
         return users.getOrDefault(userID, null);
     }
 
-    public String update(String teamId, UpdateUserDto updateArgs){
-        if(users.containsKey(teamId)) {
+    public String update(final String teamId, final UpdateUserDto updateArgs) {
+        if (users.containsKey(teamId)) {
             User user = users.get(teamId);
             if (!updateArgs.getUserName().isEmpty()) {
                 user.setUsername(updateArgs.getUserName());
             }
             return "Successfully updated user";
-        }else{
+        } else {
             return "User not found";
         }
     }
 
-    public boolean delete(String userId) {
+    public boolean delete(final String userId) {
         if (users.containsKey(userId)) {
             users.remove(userId);
             return true;

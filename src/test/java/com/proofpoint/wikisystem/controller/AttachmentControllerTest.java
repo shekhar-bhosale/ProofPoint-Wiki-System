@@ -20,7 +20,6 @@ import static com.proofpoint.wikisystem.util.Constants.STATUS_SUCCESS;
 
 import java.util.Objects;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 
@@ -35,29 +34,15 @@ public class AttachmentControllerTest {
     @Mock
     UserService userService;
 
-//    private MockMvc mvc;
-
-    /*private Attachment attachment;
-
-    private final static String FILE_NAME = "Sample.txt";
-    private final static String CONTENT = "Random data not important";
-    private final static String USERID = "User101";*/
-
     @BeforeEach
-    void setup() throws Exception {
-//        mvc = MockMvcBuilders.standaloneSetup(attachment).build();
+    void setup() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    final void testRead() throws Exception {
-
-       /* mvc.perform(get("/attachment")
-                .param("fileName", "Sample.txt"))
-                .andExpect(status().isOk());*/
-
-        when(attachmentService.read(anyString())).thenReturn(ATTACHMENT);
-        ResponseEntity<Attachment> output = attachmentController.read(FILE_NAME);
+    final void testRead() {
+        when(attachmentService.accessAttachment(FILE_NAME, REQUESTER_ID, true)).thenReturn(ATTACHMENT);
+        ResponseEntity<Attachment> output = attachmentController.read(FILE_NAME, REQUESTER_ID, INDV_USER_TRUE);
         assertNotNull(output);
         assertEquals(200, output.getStatusCode().value());
         assertEquals("Sample.txt", Objects.requireNonNull(output.getBody()).getFilename());
@@ -70,8 +55,6 @@ public class AttachmentControllerTest {
         createAttachmentDto.setFilename(FILE_NAME);
         createAttachmentDto.setContents(FILE_CONTENT);
         createAttachmentDto.setOwnerId(USER_ID);
-
-
 
         when(userService.read(USER_ID)).thenReturn(OWNER);
 

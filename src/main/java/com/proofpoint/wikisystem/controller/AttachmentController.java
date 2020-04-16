@@ -13,7 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.proofpoint.wikisystem.util.Constants.*;
+import static com.proofpoint.wikisystem.util.Constants.STATUS_FAILED_WITH_MESSAGE;
+import static com.proofpoint.wikisystem.util.Constants.STATUS_SUCCESS;
 
 @Slf4j
 @RestController
@@ -49,7 +50,7 @@ public class AttachmentController {
     public ResponseEntity<Attachment> read(@RequestParam final String fileName, @RequestParam final String requesterId, @RequestParam final String isIndividualUser) {
         log.info("Received request to read attachment");
 
-        final Attachment output = attachmentService.readAttachment(fileName, requesterId, Boolean.parseBoolean(isIndividualUser));
+        final Attachment output = attachmentService.accessAttachment(fileName, requesterId, Boolean.parseBoolean(isIndividualUser));
         ResponseEntity<Attachment> response;
         if (output != null) {
             response = new ResponseEntity<>(output, HttpStatus.OK);

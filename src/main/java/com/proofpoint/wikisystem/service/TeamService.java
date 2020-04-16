@@ -21,7 +21,7 @@ public class TeamService {
 
     private Map<String, Team> teams = new HashMap<>();
 
-    public void create(String ID, boolean isAdmin) {
+    public void create(final String ID, final boolean isAdmin) {
         log.info("Creating team with team:" + ID);
         Team team = Team.Builder
                 .newInstance()
@@ -33,7 +33,7 @@ public class TeamService {
 
     }
 
-    public Team read(String teamID) {
+    public Team read(final String teamID) {
         if (teams.containsKey(teamID)) {
             Team output = teams.get(teamID);
             log.info("Team found:" + output.toString());
@@ -52,29 +52,29 @@ public class TeamService {
         }
     }
 
-    public String update(String teamId, UpdateTeamDto updateArgs){
-        if(teams.containsKey(teamId)) {
+    public String update(final String teamId, final UpdateTeamDto updateArgs) {
+        if (teams.containsKey(teamId)) {
             Team team = teams.get(teamId);
             if (!updateArgs.getIsAdmin().isEmpty()) {
                 team.setAdmin(Boolean.parseBoolean(updateArgs.getIsAdmin()));
             }
             return "Successfully updated team";
-        }else{
+        } else {
             return "Team not found";
         }
     }
 
-    public String addMembertoTeam(String teamId, String userId){
-        if(teams.containsKey(teamId)){
+    public String addMemberToTeam(final String teamId, final String userId) {
+        if (teams.containsKey(teamId)) {
             Team team = teams.get(teamId);
             User user = userService.read(userId);
 
-            if(user!=null){
+            if (user != null) {
                 return team.addMember(user);
-            }else{
+            } else {
                 return "User not found";
             }
-        }else{
+        } else {
             return "Team not found";
         }
     }

@@ -38,7 +38,7 @@ public class TeamController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Team> read(@RequestParam String teamId) {
+    public ResponseEntity<Team> read(@RequestParam final String teamId) {
         log.info("Received request to read team");
         Team output = teamService.read(teamId);
 
@@ -62,21 +62,21 @@ public class TeamController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity<String> delete(@RequestParam String teamId) {
+    public ResponseEntity<String> delete(@RequestParam final String teamId) {
         log.info("Received request to delete team");
 
-        if (teamService.delete(teamId)){
+        if (teamService.delete(teamId)) {
             return new ResponseEntity<>("Page deleted successfully", HttpStatus.OK);
-        }else{
+        } else {
             return new ResponseEntity<>("Page not found", HttpStatus.NOT_FOUND);
         }
     }
 
 
     @RequestMapping(value = "/addmember", method = RequestMethod.POST, consumes = "application/json")
-    public ResponseEntity<String> addMember(@RequestParam String teamId, @RequestParam String userId) {
+    public ResponseEntity<String> addMember(@RequestParam final String teamId, @RequestParam final String userId) {
         log.info("Received request to add member to team");
-        String result = teamService.addMembertoTeam(teamId, userId);
+        String result = teamService.addMemberToTeam(teamId, userId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

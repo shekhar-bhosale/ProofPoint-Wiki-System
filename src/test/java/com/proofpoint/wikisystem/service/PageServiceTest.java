@@ -53,19 +53,20 @@ public class PageServiceTest {
     }
 
     @Test
-    public void testCreate_InheritedAccess() throws Exception {
+    public void testCreate_InheritedAccess_InheritParentOwner() throws Exception {
         when(userService.read(USER_ID)).thenReturn(OWNER);
         when(teamService.read(TEAM_ID)).thenReturn(TEAM);
-        when(pageService.read(PARENT_PAGE_ID)).thenReturn(PARENT_PAGE);
 
+        pageService.create(PARENT_PAGE_ID, null, PARENT_OWNER, PAGE_CONTENT, null);
         pageService.create(PAGE_ID, PARENT_PAGE_ID, OWNER, PAGE_CONTENT, null);
         Page page = pageService.read(PAGE_ID);
         assertNotNull(page);
         assertEquals(PAGE_ID, page.getPageID());
         assertEquals(PARENT_PAGE_ID, page.getParentPageID());
         assertEquals(OWNER,page.getOwner());
-        assertEquals(ACCESS_MAP, page.getAccessMap());
+        assertEquals(PARENT_USER_ID, page.getAccessMap().get(AccessType.READ_WRITE).get(0).getId());
     }
+
 
     @Test
     public void testCreate_Failed() throws Exception {

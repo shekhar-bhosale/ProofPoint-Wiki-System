@@ -14,12 +14,8 @@ public class User extends Collaborator {
         this.username = builder.username;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", ID='" + Id + '\'' +
-                '}';
+    public String getId() {
+        return this.Id;
     }
 
     public void create() {

@@ -49,7 +49,7 @@ public class PageController {
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Page> read(@RequestParam final String pageId, @RequestParam final String requesterId, @RequestParam final String isIndividualUser) {
         log.info("Received request to read page");
-        Page output = pageService.readPage(pageId, requesterId, Boolean.parseBoolean(isIndividualUser));
+        Page output = pageService.accessPage(pageId, requesterId, Boolean.parseBoolean(isIndividualUser));
 
         if (output != null) {
             return new ResponseEntity<>(output, HttpStatus.OK);

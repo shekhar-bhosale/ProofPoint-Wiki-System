@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<User> read(final @RequestParam String userID) {
+    public ResponseEntity<User> read(@RequestParam final String userID) {
         log.info("Received request to read user");
         User output = userService.read(userID);
 
@@ -61,12 +61,12 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity<String> delete(@RequestParam String userId) {
+    public ResponseEntity<String> delete(@RequestParam final String userId) {
         log.info("Received request to delete user");
 
-        if (userService.delete(userId)){
+        if (userService.delete(userId)) {
             return new ResponseEntity<>("Page deleted successfully", HttpStatus.OK);
-        }else{
+        } else {
             return new ResponseEntity<>("Page not found", HttpStatus.NOT_FOUND);
         }
     }

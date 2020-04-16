@@ -31,7 +31,7 @@ public class AccessService {
     @Autowired
     private TeamService teamService;
 
-    public void assignAccess(final CreateAccessDto createAccessDto){
+    public void assignAccess(final CreateAccessDto createAccessDto) {
         log.info("createAccessDto received:" + createAccessDto.toString());
 
         Component component;

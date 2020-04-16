@@ -13,29 +13,19 @@ public class Attachment extends Component {
     private String filename;
     private String contents;
 
-    private Attachment(Builder builder) {
+    private Attachment(final Builder builder) {
         this.filename = builder.filename;
         this.contents = builder.contents;
         this.owner = builder.owner;
-        this.accessMap = new HashMap<AccessType, List<Collaborator>>();
+        this.accessMap = new HashMap<>();
     }
 
     public User getOwner() {
         return this.owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(final User owner) {
         this.owner = owner;
-    }
-
-    @Override
-    public String toString() {
-        return "Attachment{" +
-                "filename='" + filename + '\'' +
-                ", contents='" + contents + '\'' +
-                ", owner=" + owner +
-                ", accessMap=" + accessMap +
-                '}';
     }
 
     public void create() {
@@ -54,6 +44,9 @@ public class Attachment extends Component {
         System.out.println("Updating Attachment");
     }
 
+    /** We may use lombok builder annotation to generate this and reduce boiler plate code as well.
+     * Writing this intentionally to demonstrate builder pattern.
+     */
     public static class Builder {
         private User owner;
         private String filename;
@@ -66,17 +59,17 @@ public class Attachment extends Component {
             return new Builder();
         }
 
-        public Builder withFilename(String filename) {
+        public Builder withFilename(final String filename) {
             this.filename = filename;
             return this;
         }
 
-        public Builder withContents(String contents) {
+        public Builder withContents(final String contents) {
             this.contents = contents;
             return this;
         }
 
-        public Builder withOwner(User owner) {
+        public Builder withOwner(final User owner) {
             this.owner = owner;
             return this;
         }
